@@ -7,7 +7,7 @@ services:
 
 before_install:
 - echo "Testing Docker Hub credentials"
-- docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
+- if [[ "$DOCKER_PASSOWRD" != "" ]]; then docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD; fi
 - echo "Docker Hub credentials are working"
 # If I see one day that Travis CI updates their default docker version
 # I can remove the lines below. That's why I leave this here :-)
@@ -51,3 +51,4 @@ notifications:
       - brendan.le-glaunec@epitech.eu
     on_success: never
     on_failure: always
+- if [[ "$TRAVIS_BRANCH" == "master" && "$DOCKER_PASSWORD" != "" ]]; then echo -e "Push Container to Docker Hub" && docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker tag cameradar $DOCKER_REPO:latest && docker push $DOCKER_REPO; fi
